@@ -81,4 +81,4 @@ if [[ "$check4" != *"unreachable"* ]] && [[ "$check4" != *"Unreachable"* ]];then
     MediaUnlockTest 4;
 fi
 echo -e "";
-cat ${LOG_FILE} ;
+
