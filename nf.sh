@@ -7,7 +7,7 @@ LOG_FILE="check.log";
 
 clear;
 
-echo -e " ** 系统时间: $(date)" && echo -e " ** 系统时间: $(date)" >> ${LOG_FILE};
+echo -e " ** 检测开始: $(date)" && echo -e " ** 检测开始: $(date)" >> ${LOG_FILE};
 
 export LANG="en_US";
 export LANGUAGE="en_US";
@@ -50,16 +50,11 @@ function MediaUnlockTest_Netflix() {
     
     if [[ "$result1" == *"page-404"* ]] ;then
         echo -e "NO" && echo -e " NO" >> ${LOG_FILE};
-        return;
+     else
+       echo  -e "Yes" && echo -e " Yes" >> ${LOG_FILE};
+       echo -e " ** 检测结束: $(date)" && echo -e " ** 检测结束: $(date)" >> ${LOG_FILE};
     fi
     
-    local region=`tr [:lower:] [:upper:] <<< $(curl -${1} --user-agent "${UA_Browser}" -fs --write-out %{redirect_url} --output /dev/null "https://www.netflix.com/title/80018499" | cut -d '/' -f4 | cut -d '-' -f1)` ;
-    
-    if [[ ! -n "$region" ]];then
-        region="US";
-    fi
-    echo  -e "Yes" && echo -e " Yes" >> ${LOG_FILE};
-    return;
 }
 
 
