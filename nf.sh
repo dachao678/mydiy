@@ -6,18 +6,12 @@ UA_Dalvik="Dalvik/2.1.0 (Linux; U; Android 9; ALP-AL00 Build/HUAWEIALP-AL00)";
 LOG_FILE="check.log";
 
 clear;
+
 echo -e " ** 系统时间: $(date)" && echo -e " ** 系统时间: $(date)" >> ${LOG_FILE};
 
 export LANG="en_US";
 export LANGUAGE="en_US";
 export LC_ALL="en_US";
-
-function PharseJSON() {
-    # 使用方法: PharseJSON "要解析的原JSON文本" "要解析的键值"
-    # Example: PharseJSON ""Value":"123456"" "Value" [返回结果: 123456]
-    echo -n $1 | jq -r .$2;
-}
-
 
 function InstallJQ() {
     #安装JQ
@@ -41,14 +35,21 @@ function InstallJQ() {
     fi
 }
 
+function PharseJSON() {
+    # 使用方法: PharseJSON "要解析的原JSON文本" "要解析的键值"
+    # Example: PharseJSON ""Value":"123456"" "Value" [返回结果: 123456]
+    echo -n $1 | jq -r .$2;
+}
+
+
 function MediaUnlockTest_Netflix() {
     echo -n -e " Netflix:\t\t\t\t->\c";
-
+  
     local result1=`curl -${1} --user-agent "${UA_Browser}" -sL "https://www.netflix.com/title/70143836" 2>&1`;
 
     
     if [[ "$result1" == *"page-404"* ]] ;then
-        echo -n -e "\r NO\n" && echo -e " NO" >> ${LOG_FILE};
+        echo -n -e "\r Netflix:\t\t\t\t${Font_Yellow}Only Homemade${Font_Suffix}\n" && echo -e " Netflix:\t\t\t\tOnly Homemade" >> ${LOG_FILE};
         return;
     fi
     
@@ -57,8 +58,16 @@ function MediaUnlockTest_Netflix() {
     if [[ ! -n "$region" ]];then
         region="US";
     fi
-    echo -n -e "\r yes\n" && echo -e " yes" >> ${LOG_FILE};
+    echo -n -e "\r Netflix:\t\t\t\t${Font_Green}Yes(Region: ${region})${Font_Suffix}\n" && echo -e " Netflix:\t\t\t\tYes(Region: ${region})" >> ${LOG_FILE};
     return;
+}
+
+
+
+function MediaUnlockTest() {
+
+    MediaUnlockTest_Netflix ${1};
+
 }
 
 curl -V > /dev/null 2>&1;
@@ -75,9 +84,6 @@ echo " ** 正在测试IPv4解锁情况" && echo " ** 正在测试IPv4解锁情�
 check4=`ping 1.1.1.1 -c 1 2>&1`;
 if [[ "$check4" != *"unreachable"* ]] && [[ "$check4" != *"Unreachable"* ]];then
     MediaUnlockTest 4;
-else
-    echo -e "${Font_SkyBlue}当前主机不支持IPv4,跳过...${Font_Suffix}" && echo "当前主机不支持IPv4,跳过..." >> ${LOG_FILE};
 fi
 echo -e "";
 cat ${LOG_FILE} ;
-
