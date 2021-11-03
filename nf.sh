@@ -5,13 +5,9 @@ UA_Dalvik="Dalvik/2.1.0 (Linux; U; Android 9; ALP-AL00 Build/HUAWEIALP-AL00)";
 
 LOG_FILE="check.log";
 
-clear;
 
 echo -e " ** 检测开始: $(date)" && echo -e " ** 检测开始: $(date)" >> ${LOG_FILE};
 
-export LANG="en_US";
-export LANGUAGE="en_US";
-export LC_ALL="en_US";
 
 function InstallJQ() {
     #安装JQ
@@ -81,4 +77,3 @@ if [[ "$check4" != *"unreachable"* ]] && [[ "$check4" != *"Unreachable"* ]];then
     MediaUnlockTest 4;
 fi
 echo -e "";
-
