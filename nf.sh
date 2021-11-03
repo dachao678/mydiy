@@ -80,7 +80,7 @@ jq -V > /dev/null 2>&1;
 if [ $? -ne 0 ];then
     InstallJQ;
 fi
-echo " ** 正在测试IPv4解锁情况" && echo " ** 正在测试IPv4解锁情况" >> ${LOG_FILE};
+
 check4=`ping 1.1.1.1 -c 1 2>&1`;
 if [[ "$check4" != *"unreachable"* ]] && [[ "$check4" != *"Unreachable"* ]];then
     MediaUnlockTest 4;
