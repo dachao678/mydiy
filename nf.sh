@@ -6,12 +6,18 @@ UA_Dalvik="Dalvik/2.1.0 (Linux; U; Android 9; ALP-AL00 Build/HUAWEIALP-AL00)";
 LOG_FILE="check.log";
 
 clear;
-
 echo -e " ** 系统时间: $(date)" && echo -e " ** 系统时间: $(date)" >> ${LOG_FILE};
 
 export LANG="en_US";
 export LANGUAGE="en_US";
 export LC_ALL="en_US";
+
+function PharseJSON() {
+    # 使用方法: PharseJSON "要解析的原JSON文本" "要解析的键值"
+    # Example: PharseJSON ""Value":"123456"" "Value" [返回结果: 123456]
+    echo -n $1 | jq -r .$2;
+}
+
 
 function InstallJQ() {
     #安装JQ
@@ -42,7 +48,7 @@ function MediaUnlockTest_Netflix() {
 
     
     if [[ "$result1" == *"page-404"* ]] ;then
-        echo -n -e "NO" && echo -e " NO" >> ${LOG_FILE};
+        echo -n -e "\r NO\n" && echo -e " NO" >> ${LOG_FILE};
         return;
     fi
     
@@ -51,6 +57,27 @@ function MediaUnlockTest_Netflix() {
     if [[ ! -n "$region" ]];then
         region="US";
     fi
-    echo -n -e "yes" && echo -e " yes" >> ${LOG_FILE};
+    echo -n -e "\r yes\n" && echo -e " yes" >> ${LOG_FILE};
     return;
 }
+
+curl -V > /dev/null 2>&1;
+if [ $? -ne 0 ];then
+    echo -e "${Font_Red}Please install curl${Font_Suffix}";
+    exit;
+fi
+
+jq -V > /dev/null 2>&1;
+if [ $? -ne 0 ];then
+    InstallJQ;
+fi
+echo " ** 正在测试IPv4解锁情况" && echo " ** 正在测试IPv4解锁情况" >> ${LOG_FILE};
+check4=`ping 1.1.1.1 -c 1 2>&1`;
+if [[ "$check4" != *"unreachable"* ]] && [[ "$check4" != *"Unreachable"* ]];then
+    MediaUnlockTest 4;
+else
+    echo -e "${Font_SkyBlue}当前主机不支持IPv4,跳过...${Font_Suffix}" && echo "当前主机不支持IPv4,跳过..." >> ${LOG_FILE};
+fi
+echo -e "";
+cat ${LOG_FILE} ;
+
