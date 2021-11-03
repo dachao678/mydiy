@@ -43,13 +43,13 @@ function PharseJSON() {
 
 
 function MediaUnlockTest_Netflix() {
-    echo -n -e " Netflix:\t\t\t\t->\c";
+
   
     local result1=`curl -${1} --user-agent "${UA_Browser}" -sL "https://www.netflix.com/title/70143836" 2>&1`;
 
     
     if [[ "$result1" == *"page-404"* ]] ;then
-        echo -n -e "\r Netflix:\t\t\t\t${Font_Yellow}Only Homemade${Font_Suffix}\n" && echo -e " Netflix:\t\t\t\tOnly Homemade" >> ${LOG_FILE};
+        echo -e "NO" && echo -e " NO" >> ${LOG_FILE};
         return;
     fi
     
@@ -58,7 +58,7 @@ function MediaUnlockTest_Netflix() {
     if [[ ! -n "$region" ]];then
         region="US";
     fi
-    echo -n -e "\r Netflix:\t\t\t\t${Font_Green}Yes(Region: ${region})${Font_Suffix}\n" && echo -e " Netflix:\t\t\t\tYes(Region: ${region})" >> ${LOG_FILE};
+    echo  -e "Yes" && echo -e " Yes" >> ${LOG_FILE};
     return;
 }
 
