@@ -6,21 +6,21 @@ while [[ "$input" == "y" ]]
 do
     result=$(curl --user-agent "${UA_Browser}" -fsL --write-out %{http_code} --output /dev/null --max-time 5 "https://www.netflix.com/title/70143836" 2>&1)
     if [[ "$result" == "404" ]];then
-        echo -e "IP掉了切换中"
+        echo -e "IP掉了切换中$(date)"
         systemctl restart wg-quick@wgcf
         sleep 3
 	
     elif  [[ "$result" == "403" ]];then
-        echo -e "IP掉了切换中"
+        echo -e "IP掉了切换中$(date)"
         systemctl restart wg-quick@wgcf
         sleep 3
 	
     elif  [[ "$result" == "200" ]];then
-            echo -e "IP OK!"
+            echo -e "IP OK!$(date)"
             sleep 1200
 
     elif  [[ "$result" == "000" ]];then
-	echo -e "IP掉了切换中"
+	echo -e "IP掉了切换中$(date)"
         systemctl restart wg-quick@wgcf
     fi
 done
